@@ -1,58 +1,43 @@
 name: Publish Package
-
 on:
   push:
     branches:
       - main
-
 jobs:
-  prepare:
+  create_gitub_release:
     runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.get_version.outputs.version }}
     steps:
     - uses: actions/checkout@v3
 
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.x'
-        channel: 'stable'
-
-    - name: Install Package Dependencies
-      run: flutter pub get
-
     - name: Get version
       id: get_version
-      run: echo ::set-output name=version::$(grep 'version:' pubspec.yaml | awk '{print $2}')
+      run: |
+        echo "VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')" >> $GITHUB_ENV
 
-  create_release:
-    needs: prepare
-    runs-on: ubuntu-latest
-    steps:
     - name: Create GitHub Release
+      id: create_github_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v${{ needs.prepare.outputs.version }}
-        release_name: Release ${{ needs.prepare.outputs.version }}
+        tag_name: ${{ env.VERSION }}
+        release_name: Release ${{ env.VERSION }}
         body: |
-          Release ${{ needs.prepare.outputs.version }} of Flongo-Client 🎉
+          Release ${{ env.VERSION }} of Flongo-Client 🎉
           
-          [View on pub.dev](https://pub.dev/packages/flongo_client/versions/${{ needs.prepare.outputs.version }}/)
+          [View on pub.dev](https://pub.dev/packages/flongo_client/versions/${{ env.VERSION }}/)
         draft: false
         prerelease: false
 
-  publish:
-    needs: create_release
+  publish_flutter_release:
+    needs: create_gitub_release
     permissions:
       id-token: write
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
       with:
-        ref: v${{ needs.prepare.outputs.version }} # Check out the tag created by the release
+        ref: ${{ env.VERSION }} # Check out the tag created by the release
 
     - uses: dart-lang/setup-dart@b64355ae6ca0b5d484f0106a033dd1388965d06d
     
@@ -67,5 +52,3 @@ jobs:
 
     - name: Publish to pub.dev
       run: flutter pub publish -f
-      env:
-        PUB_ACCESS_TOKEN: ${{ env.PUB_TOKEN }}
