@@ -1,7 +1,8 @@
 name: Create Release
+
 env:
-    GIT_USER_NAME: 'Peter Swanson'
-    GIT_USER_EMAIL: 'pswanson@ucdavis.edu'
+  GIT_USER_NAME: 'Peter Swanson'
+  GIT_USER_EMAIL: 'pswanson@ucdavis.edu'
 
 on:
   push:
@@ -12,21 +13,21 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Git identity
-      run: |
-        git config --global user.name "${{ env.GIT_USER_NAME }}"
-        git config --global user.email "${{ env.GIT_USER_EMAIL }}"
-    - name: Compute version and tag
-      id: versioning
-      run: |
-        VERSION=$(grep 'version:' pubspec.yaml | sed 's/version: //')
-        echo "PACKAGE_VERSION=$VERSION" >> $GITHUB_ENV
-        echo ::set-output name=tag::v$VERSION
-    - name: Create and push tag
-      if: steps.versioning.outputs.tag
-      run: |
-        TAG="v${VERSION}"
-        BODY="Release ${TAG} of Flongo-Client 🎉\n\n[View on pub.dev](https://pub.dev/packages/flongo_client/versions/${VERSION})"
-        git tag -a ${{ steps.versioning.outputs.tag }} -m "Release ${{ steps.versioning.outputs.tag }}"
-        git push origin ${{ steps.versioning.outputs.tag }}
+      - uses: actions/checkout@v3
+      - name: Set up Git identity
+        run: |
+          git config --global user.name "${{ env.GIT_USER_NAME }}"
+          git config --global user.email "${{ env.GIT_USER_EMAIL }}"
+      - name: Compute version and tag
+        id: versioning
+        run: |
+          VERSION=$(grep 'version:' pubspec.yaml | sed 's/version: //')
+          echo "PACKAGE_VERSION=$VERSION" >> $GITHUB_ENV
+          echo ::set-output name=tag::v$VERSION
+      - name: Create and push tag
+        if: steps.versioning.outputs.tag
+        run: |
+          TAG="v${VERSION}"
+          BODY="Release ${TAG} of Flongo-Client 🎉\n\n[View on pub.dev](https://pub.dev/packages/flongo_client/versions/${VERSION})"
+          git tag -a ${{ steps.versioning.outputs.tag }} -m ${BODY}
+          git push --tags https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }} ${{ steps.versioning.outputs.tag }}
