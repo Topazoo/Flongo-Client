@@ -18,16 +18,13 @@ jobs:
         with:
           flutter-version: '3.x'
           channel: 'stable'
-      - name: Install Flutter
+      - name: Install Package Dependencies
         run: flutter pub get
         working-directory: ${{ inputs.working-directory }}
       - name: Get version
         id: get_version
         run: |
           echo "VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')" >> $GITHUB_ENV
-      - name: Publish - dry run
-        run: flutter pub publish --dry-run
-        working-directory: ${{ inputs.working-directory }}
       - name: Publish to pub.dev
         run: flutter pub publish -f
         working-directory: ${{ inputs.working-directory }}
