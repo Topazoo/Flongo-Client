@@ -21,8 +21,8 @@ jobs:
 
     - name: Create and Push tag
       run: |
-        git tag v${{ steps.get_version.outputs.version }}
-        git push origin v${{ steps.get_version.outputs.version }}
+        git tag ${{ steps.get_version.outputs.version }}
+        git push origin ${{ steps.get_version.outputs.version }}
       env:
         PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
@@ -31,10 +31,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       with:
-        tag_name: v${{ steps.get_version.outputs.version }}
-        release_name: Release v${{ steps.get_version.outputs.version }}
+        tag_name: ${{ steps.get_version.outputs.version }}
+        release_name: Release ${{ steps.get_version.outputs.version }}
         body: |
-          Release v${{ steps.get_version.outputs.version }} of Flongo-Client :tada:
+          Release ${{ steps.get_version.outputs.version }} of Flongo-Client :tada:
 
           [View on pub.dev](https://pub.dev/packages/flongo_client/versions/${{ steps.get_version.outputs.version }})
           
