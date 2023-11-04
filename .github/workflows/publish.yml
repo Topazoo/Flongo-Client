@@ -1,0 +1,50 @@
+name: Publish Package
+
+on:
+  push:
+    branches:
+      - main  # Set this to the branch you want to trigger the publish action
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # Required for authentication using OIDC.
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '3.1.4' # Specify the Flutter version
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Get version
+        id: get_version
+        run: |
+          echo "VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')" >> $GITHUB_ENV
+
+      - name: Publish to Pub.dev
+        uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.VERSION }}
+          release_name: Release ${{ env.VERSION }}
+          body: |
+            Release ${{ env.VERSION }} of Flongo-Client :tada:
+        
+            [View on pub.dev](https://pub.dev/packages/flongo_client/versions/${{ env.VERSION }}/)
+
+            **Changelog:**
+            ${{ steps.get_commits.outputs.commits }}
+          draft: false
+          prerelease: false
