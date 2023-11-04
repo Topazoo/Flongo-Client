@@ -20,7 +20,7 @@ jobs:
       run: echo ::set-output name=version::$(grep 'version:' pubspec.yaml | awk '{print $2}')
     - name: Commit and Tag
       run: |
-        git tag v${{ steps.get_version.outputs.version }}
+        git tag ${{ steps.get_version.outputs.version }}
         git push origin v${{ steps.get_version.outputs.version }}
 
   publish_flutter_package:
