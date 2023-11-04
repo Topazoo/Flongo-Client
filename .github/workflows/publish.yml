@@ -1,33 +1,14 @@
-name: Publish Package
+name: Publish and Release
 
 on:
   push:
-    branches:
-      - main
     tags:
       - '[0-9]+.[0-9]+.[0-9]+'  # This will match tags like 1.0.0, 10.0.12, etc.
 
 jobs:
-  prepare-and-tag:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.get_version.outputs.version }}
-    steps:
-    - uses: actions/checkout@v3
-    - name: Get version
-      id: get_version
-      run: echo ::set-output name=version::$(grep 'version:' pubspec.yaml | awk '{print $2}')
-    - name: Commit and Tag
-      run: |
-        git tag ${{ steps.get_version.outputs.version }}
-        git push origin ${{ steps.get_version.outputs.version }}
-
   publish_flutter_package:
-    if: startsWith(github.ref, 'refs/tags/') && github.event_name == 'push'
     permissions:
       id-token: write
-    needs: [prepare-and-tag]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -47,19 +28,18 @@ jobs:
       run: flutter pub publish -f
 
   create_github_release:
-    if: startsWith(github.ref, 'refs/tags/') && github.event_name == 'push'
     needs: [publish_flutter_package]
     runs-on: ubuntu-latest
     steps:
-    - name: Create GitHub Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref_name }}
-        body: |
-          Release ${{ github.ref_name }} of Flongo-Client 🎉
-          [View on pub.dev](https://pub.dev/packages/flongo_client/versions/${{ github.ref_name }}/)
-        draft: false
-        prerelease: false
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref_name }}
+          body: |
+            Release ${{ github.ref_name }} of Flongo-Client 🎉
+            [View on pub.dev](https://pub.dev/packages/flongo_client/versions/${{ github.ref_name }}/)
+          draft: false
+          prerelease: false

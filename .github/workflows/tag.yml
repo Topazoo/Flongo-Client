@@ -1,0 +1,21 @@
+name: Tag Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Ensures tags are fetched
+      - name: Get version
+        id: get_version
+        run: echo ::set-output name=version::$(grep 'version:' pubspec.yaml | awk '{print $2}')
+      - name: Commit and Tag
+        run: |
+          git tag ${{ steps.get_version.outputs.version }}
+          git push origin ${{ steps.get_version.outputs.version }}
