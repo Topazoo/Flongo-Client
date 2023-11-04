@@ -1,7 +1,9 @@
 name: Create Tag and Release
 
 on:
-  workflow_dispatch: # Manually trigger the workflow, you could also trigger it on push to a specific branch or on pull request merge
+  push:
+    branches:
+      - main
 
 jobs:
   tag-and-release:
@@ -22,12 +24,12 @@ jobs:
         git tag v${{ steps.get_version.outputs.version }}
         git push origin v${{ steps.get_version.outputs.version }}
       env:
-        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
     - name: Create GitHub Release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       with:
         tag_name: v${{ steps.get_version.outputs.version }}
         release_name: Release v${{ steps.get_version.outputs.version }}
