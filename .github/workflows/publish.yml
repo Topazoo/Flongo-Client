@@ -21,7 +21,7 @@ jobs:
     - name: Commit and Tag
       run: |
         git tag ${{ steps.get_version.outputs.version }}
-        git push origin v${{ steps.get_version.outputs.version }}
+        git push origin ${{ steps.get_version.outputs.version }}
 
   publish_flutter_package:
     if: startsWith(github.ref, 'refs/tags/') && github.event_name == 'push'
