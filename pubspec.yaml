@@ -1,6 +1,6 @@
 name: flongo_client
 description: Seamless frontend for Flongo-Framework for web and mobile
-version: 0.0.2
+version: 0.0.3
 repository: https://github.com/Topazoo/Flongo-Client
 
 environment:
