@@ -7,22 +7,20 @@ on:
 
 jobs:
   publish:
-    permissions:
-      id-token: write # Required for authentication using OIDC.
-    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
-    
-  create-release:
-    needs: publish
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
+      permissions:
+        id-token: write # Required for authentication using OIDC
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v3
+      - uses: dart-lang/setup-dart@v1
+      - name: Install dependencies
+        run: flutter pub get
       - name: Get version
         id: get_version
         run: |
           echo "VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')" >> $GITHUB_ENV
-      
+      - name: Publish
+        run: dart pub publish --force
       - name: Create GitHub Release
         uses: actions/create-release@v1
         env:
@@ -34,8 +32,5 @@ jobs:
             Release ${{ env.VERSION }} of Flongo-Client 🎉
             
             [View on pub.dev](https://pub.dev/packages/flongo_client/versions/${{ needs.publish.outputs.VERSION }}/)
-            
-            **Changelog:**
-            # You will need to generate or define your changelog here.
           draft: false
           prerelease: false
