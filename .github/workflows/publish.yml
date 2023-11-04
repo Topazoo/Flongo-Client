@@ -1,12 +1,12 @@
-name: Publish Package
+name: Publish to pub.dev
 
 on:
   push:
     tags:
-      - '[0-9]+.[0-9]+.[0-9]+'  # This will match tags like 1.0.0, 10.0.12, etc.
+      - 'v[0-9]+.[0-9]+.[0-9]+*' # Adjust this pattern to match your tagging convention
 
 jobs:
-  publish_flutter_package:
+  publish:
     permissions:
       id-token: write
     runs-on: ubuntu-latest
@@ -26,20 +26,3 @@ jobs:
       
     - name: Publish to pub.dev
       run: flutter pub publish -f
-
-  create_github_release:
-    needs: [publish_flutter_package]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create GitHub Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref_name }}
-          body: |
-            Release ${{ github.ref_name }} of Flongo-Client 🎉
-            [View on pub.dev](https://pub.dev/packages/flongo_client/versions/${{ github.ref_name }}/)
-          draft: false
-          prerelease: false
