@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 141.38 185.81">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #000;
+        stroke-miterlimit: 10;
+        stroke-width: 10px;
+      }
+    </style>
+  </defs>
+  <g id="Layer_3" data-name="Layer 3">
+    <g id="Flask">
+      <rect class="cls-2" x="26.92" y="5" width="87.53" height="5" rx="2.49" ry="2.49"/>
+      <path d="M23.14,97.97H118.24c8.28,0,15,6.72,15,15v35.84c0,17.11-13.89,31-31,31H39.14c-17.11,0-31-13.89-31-31v-35.84c0-8.28,6.72-15,15-15Z"/>
+      <path class="cls-2" d="M5,109.02v-5.93c0-23.92,12.9-44.97,32.06-56.51-.22-.9-.33-1.83-.33-2.79V22c0-6.6,5.4-12,12-12h46.02c6.6,0,12,5.4,12,12v21.79c0,1.37-.23,2.68-.66,3.9,18.18,11.74,30.28,32.22,30.28,55.39v5.93m0,0v24.11c0,26.22-21.4,47.67-47.56,47.67H52.56c-26.16,0-47.56-21.45-47.56-47.67v-24.11"/>
+      <g>
+        <rect class="cls-1" x="31.86" y="105.28" width="28.1" height="9.42" rx="4.2" ry="4.2"/>
+        <rect class="cls-1" x="31.86" y="127.03" width="28.1" height="9.42" rx="4.2" ry="4.2"/>
+        <rect class="cls-1" x="31.86" y="148.78" width="28.1" height="9.42" rx="4.2" ry="4.2"/>
+        <rect x="31.86" y="83.53" width="28.1" height="9.42" rx="4.2" ry="4.2"/>
+      </g>
+    </g>
+  </g>
+</svg>

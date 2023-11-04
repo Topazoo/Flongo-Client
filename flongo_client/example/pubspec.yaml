@@ -1,0 +1,27 @@
+name: demo
+description: A demo client built using the framework
+version: 1.0.0+1
+publish_to: 'none' # Prevent publishing the example app
+environment:
+  sdk: '>=3.1.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.1.0
+  flutter_dotenv: ^5.1.0
+  lottie: ^2.7.0
+  flutter_svg: ^2.0.8
+  flongo_client:
+    path: ../
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/images/
