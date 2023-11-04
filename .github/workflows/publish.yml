@@ -4,7 +4,7 @@ on:
     branches:
       - main
 jobs:
-  prepare:
+  create_gitub_release:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -29,8 +29,8 @@ jobs:
         draft: false
         prerelease: false
 
-  publish:
-    needs: prepare
+  publish_flutter_release:
+    needs: create_gitub_release
     permissions:
       id-token: write
     runs-on: ubuntu-latest
