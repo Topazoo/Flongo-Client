@@ -11,6 +11,7 @@ jobs:
     permissions:
       contents: read
       id-token: write # Required for authentication using OIDC.
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -20,23 +21,27 @@ jobs:
         run: |
           echo "VERSION=$(grep 'version:' pubspec.yaml | awk '{print $2}')" >> $GITHUB_ENV
 
-      - name: Publish to Pub.dev
-        uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+  publish-to-pub:
+    needs: publish
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
 
+  create-release:
+    needs: publish-to-pub
+    runs-on: ubuntu-latest
+    steps:
       - name: Create GitHub Release
-        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.VERSION }}
-          release_name: Release ${{ env.VERSION }}
+          tag_name: ${{ needs.publish.outputs.VERSION }}
+          release_name: Release ${{ needs.publish.outputs.VERSION }}
           body: |
-            Release ${{ env.VERSION }} of Flongo-Client :tada:
-        
-            [View on pub.dev](https://pub.dev/packages/flongo_client/versions/${{ env.VERSION }}/)
-
+            Release ${{ needs.publish.outputs.VERSION }} of Flongo-Client 🎉
+            
+            [View on pub.dev](https://pub.dev/packages/flongo_client/versions/${{ needs.publish.outputs.VERSION }}/)
+            
             **Changelog:**
-            ${{ steps.get_commits.outputs.commits }}
+            # You will need to generate or define your changelog here.
           draft: false
           prerelease: false
