@@ -1,7 +1,7 @@
 name: flongo_client
-description: A new Flutter package project.
+description: Seamless frontend for Flongo-Framework for web and mobile
 version: 0.0.1
-homepage:
+repository: https://github.com/Topazoo/Flongo-Client
 
 environment:
   sdk: '>=3.1.4 <4.0.0'
