@@ -1,4 +1,7 @@
 name: Create Release
+env:
+    GIT_USER_NAME: 'Peter Swanson'
+    GIT_USER_EMAIL: 'pswanson@ucdavis.edu'
 
 on:
   push:
@@ -10,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+    - name: Set up Git identity
+      run: |
+        git config --global user.name "${{ env.GIT_USER_NAME }}"
+        git config --global user.email "${{ env.GIT_USER_EMAIL }}"
     - name: Compute version and tag
       id: versioning
       run: |
