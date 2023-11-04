@@ -27,7 +27,8 @@ jobs:
       - name: Create and push tag
         if: steps.versioning.outputs.tag
         run: |
+          VERSION="${{ env.PACKAGE_VERSION }}"
           TAG="v${VERSION}"
           BODY="Release ${TAG} of Flongo-Client 🎉\n\n[View on pub.dev](https://pub.dev/packages/flongo_client/versions/${VERSION})"
-          git tag -a ${{ steps.versioning.outputs.tag }} -m ${BODY}
+          git tag -a "${TAG}" -m "${BODY}"
           git push --tags https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }} ${{ steps.versioning.outputs.tag }}
