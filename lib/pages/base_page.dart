@@ -111,7 +111,7 @@ abstract class BasePageState<T extends BasePage> extends State<T> {
             currentAccountPicture: const CircleAvatar(),
           ),
           ..._buildStaticNavBarItems(context),
-          if (HTTPClient.isAdminAuthenticated()) ...[
+          if (HTTPClient.isAuthenticated()) ...[
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
