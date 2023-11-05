@@ -124,7 +124,11 @@ abstract class BasePageState<T extends BasePage> extends State<T> {
                 );
               },
               (response) {
-                // Handle error if needed
+                Navigator.pushNamed(
+                  context, 
+                  '/',
+                  arguments: {"_animation": FadeToBlackTransition.transitionsBuilder, "_animation_duration": 800}
+                );
               },
             );
             },

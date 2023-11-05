@@ -56,8 +56,12 @@ class HTTPClient {
 
   static void deAuthenticate() {
     _accessCookie = null;
+    _csrfCookie = null;
     _identity = null;
     _roles = null;
+
+    username = null;
+    email = null;
 
     _headers.remove('cookie');
     _headers.remove('X-CSRF-TOKEN');
