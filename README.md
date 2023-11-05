@@ -15,13 +15,24 @@ Seamless frontend for Flongo-Framework that provides out of the box widgets for 
 You can see an example client defined in the  `/example` folder.
 
 ```dart
+import 'package:flongo_client/app.dart';
+import 'package:flongo_client/app_router.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'pages/config/page.dart';
+import 'pages/home/page.dart';
+import 'pages/login/page.dart';
+import 'splash/page.dart';
+import 'theme.dart';
+
 final FlongoApp app = FlongoApp(
   router: AppRouter(
     routeBuilders: {
       '/_splash': (context, args) => const SplashScreen(),
-      '/': (context, args) => const LoginPage(),
-      '/home': (context, args) => const HomePage(),
-      '/config': (context, args) => const ConfigPage(),
+      '/': (context, args) => LoginPage(),
+      '/home': (context, args) => HomePage(),
+      '/config': (context, args) => ConfigPage(),
     },
   ),
   initialRoute: '/_splash',
@@ -37,8 +48,9 @@ void main() async {
 
 The application:
 
-- Serves a default splash sceen on `/_splash``
+- Serves a default splash sceen on `/_splash`
 - Renders a login page on `/` that connects to a Flongo Framework server
+- Renders a dynamic navbar
 - Renders a home page on `/` for authenticated users
 - Renders a JSON List view page on `/config` for admin users with basic CRUD support
 
