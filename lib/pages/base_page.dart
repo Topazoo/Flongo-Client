@@ -87,8 +87,8 @@ abstract class BasePageState<T extends BasePage> extends State<T> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text(HTTPClient.getIdentity() ?? 'Guest'),
-            accountEmail: Text(HTTPClient.isAuthenticated() ? "Roles: ${HTTPClient.getRoles()}" : 'Please Login'),
+            accountName: Text(HTTPClient.getUsername() ?? 'Guest'),
+            accountEmail: Text(HTTPClient.isAuthenticated() ? "Email: ${HTTPClient.getEmail() ?? 'None'}" : 'Please Login'),
             currentAccountPicture: const CircleAvatar(),
           ),
           ListTile(
