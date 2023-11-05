@@ -1,3 +1,6 @@
 #!/bin/sh
 
-dart run pub_version_plus:main patch
+COMMIT_MSG=$(dart run pub_version_plus:main patch)
+
+git add --all
+git commit -m $COMMIT_MSG
