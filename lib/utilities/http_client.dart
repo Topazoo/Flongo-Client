@@ -21,6 +21,11 @@ class HTTPClient {
   static String? _identity;
   static List<String>? _roles;
 
+  // Authed user details
+  static String? username;
+  static String? email;
+
+
   HTTPClient(String url)
         : baseUrl = '${env['APP_API_URL']}/${url.startsWith("/") ? url.substring(1) : url}',
         timeoutDuration = Duration(milliseconds: int.parse(env['APP_API_TIMEOUT_MS'] ?? '3000')) {
@@ -76,8 +81,11 @@ class HTTPClient {
 
   static bool _setIdentityData(Map<String, dynamic>? identityData){
     if (identityData != null) {
-      _identity = identityData['identity'];
+      _identity = identityData['_id'];
       _roles = identityData['roles'];
+
+      username = identityData['username'];
+      email = identityData['email'];
 
       return true;
     }
@@ -91,6 +99,14 @@ class HTTPClient {
 
   static String? getIdentity() {
     return _identity;
+  }
+
+  static String? getUsername() {
+    return username;
+  }
+
+  static String? getEmail() {
+    return email;
   }
 
   static String getRoles() {
