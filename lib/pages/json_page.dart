@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 abstract class JSON_Page<W extends JSON_Widget> extends API_Page {
   
-  JSON_Page({super.key});
+  const JSON_Page({super.key});
 
   @override
   JSON_PageState<W> createState() => JSON_PageState<W>();

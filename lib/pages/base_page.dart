@@ -7,9 +7,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 abstract class BasePage extends StatefulWidget {
   final bool authenticationRequired = false;
-  final AppNavBar navbar = AppNavBar();
+  final AppNavBar navbar = const AppNavBar();
 
-  BasePage({super.key});
+  const BasePage({super.key});
 }
 
 abstract class BasePageState<T extends BasePage> extends State<T> {

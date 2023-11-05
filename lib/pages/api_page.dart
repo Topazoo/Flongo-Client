@@ -9,7 +9,7 @@ class API_Page extends BasePage {
   final String dataPath = 'data';
   final bool fetchOnLoad = false;
 
-  API_Page({super.key});
+  const API_Page({super.key});
 
   @override
   API_PageState createState() => API_PageState();
