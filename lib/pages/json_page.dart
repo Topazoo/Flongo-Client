@@ -14,5 +14,6 @@ class JSON_PageState<W extends JSON_Widget> extends API_PageState<JSON_Page<W>> 
 
   @override
   Widget getPageWidget(BuildContext context) => JSON_Widget(data: data, apiURL: widget.apiURL);
+  
 }
 

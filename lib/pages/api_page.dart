@@ -32,6 +32,9 @@ class API_PageState<T extends API_Page> extends BasePageState<T> {
     }
   }
 
+  @override
+  List<Widget> getNavBarWidgets(BuildContext context) => [];
+
   Future<void> fetchData() async {
     await client.get(
         onSuccess: (response) {
