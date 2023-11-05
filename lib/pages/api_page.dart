@@ -9,7 +9,7 @@ class API_Page extends BasePage {
   final String dataPath = 'data';
   final bool fetchOnLoad = false;
 
-  const API_Page({super.key});
+  API_Page({super.key});
 
   @override
   API_PageState createState() => API_PageState();
@@ -31,6 +31,9 @@ class API_PageState<T extends API_Page> extends BasePageState<T> {
       isLoading = false;
     }
   }
+
+  @override
+  List<Widget> getNavBarWidgets(BuildContext context) => [];
 
   Future<void> fetchData() async {
     await client.get(

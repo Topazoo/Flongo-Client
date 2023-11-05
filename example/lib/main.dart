@@ -13,9 +13,9 @@ final FlongoApp app = FlongoApp(
   router: AppRouter(
     routeBuilders: {
       '/_splash': (context, args) => const SplashScreen(),
-      '/': (context, args) => const LoginPage(),
-      '/home': (context, args) => const HomePage(),
-      '/config': (context, args) => const ConfigPage(),
+      '/': (context, args) => LoginPage(),
+      '/home': (context, args) => HomePage(),
+      '/config': (context, args) => ConfigPage(),
     },
   ),
   initialRoute: '/_splash',

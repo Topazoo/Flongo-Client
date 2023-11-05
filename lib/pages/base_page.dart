@@ -1,13 +1,15 @@
 import 'package:flongo_client/styles/theme.dart';
 import 'package:flongo_client/utilities/http_client.dart';
 import 'package:flongo_client/utilities/transitions/fade_to_black_transition.dart';
+import 'package:flongo_client/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 abstract class BasePage extends StatefulWidget {
   final bool authenticationRequired = false;
+  final AppNavBar navbar = AppNavBar();
 
-  const BasePage({super.key});
+  BasePage({super.key});
 }
 
 abstract class BasePageState<T extends BasePage> extends State<T> {
@@ -24,6 +26,23 @@ abstract class BasePageState<T extends BasePage> extends State<T> {
         Navigator.of(context).pushReplacementNamed('/');
       });
     }
+  }
+
+  List<Widget> _buildStaticNavBarItems(BuildContext context) {
+    return (widget.navbar.getNavbarItems()).map((item) {
+      return ListTile(
+        leading: Icon(item.icon),
+        title: Text(item.title),
+        onTap: () {
+          if (![item.routeName, ...item.inaccessibleRoutes].contains(ModalRoute.of(context)?.settings.name)) {
+            Navigator.of(context).pushReplacementNamed(
+              item.routeName,
+              arguments: item.routeArguments,
+            );
+          }
+        },
+      );
+    }).toList();
   }
 
   @protected
@@ -91,48 +110,31 @@ abstract class BasePageState<T extends BasePage> extends State<T> {
             accountEmail: Text(HTTPClient.isAuthenticated() ? "Email: ${HTTPClient.getEmail() ?? 'None'}" : 'Please Login'),
             currentAccountPicture: const CircleAvatar(),
           ),
-          ListTile(
-            leading: const Icon(Icons.home),
-            title: const Text('Home'),
-            onTap: () {
-              if (!['/', '/home'].contains(ModalRoute.of(context)?.settings.name)) {
-                Navigator.of(context).pushReplacementNamed('/home', arguments: {"_animation": FadeToBlackTransition.transitionsBuilder, "_animation_duration": 400});
-              }
-            },
-          ),
+          ..._buildStaticNavBarItems(context),
           if (HTTPClient.isAdminAuthenticated()) ...[
             ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Config'),
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
               onTap: () {
-                if (ModalRoute.of(context)?.settings.name != '/config') {
-                  Navigator.of(context).pushReplacementNamed('/config', arguments: {"_animation": FadeToBlackTransition.transitionsBuilder, "_animation_duration": 400});
-                }
+                HTTPClient('/authenticate').logout(
+                (response) {
+                  Navigator.pushNamed(
+                    context, 
+                    '/',
+                    arguments: {"_animation": FadeToBlackTransition.transitionsBuilder, "_animation_duration": 800}
+                  );
+                },
+                (response) {
+                  Navigator.pushNamed(
+                    context, 
+                    '/',
+                    arguments: {"_animation": FadeToBlackTransition.transitionsBuilder, "_animation_duration": 800}
+                  );
+                },
+              );
               },
             ),
-          ],
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
-            onTap: () {
-              HTTPClient('/authenticate').logout(
-              (response) {
-                Navigator.pushNamed(
-                  context, 
-                  '/',
-                  arguments: {"_animation": FadeToBlackTransition.transitionsBuilder, "_animation_duration": 800}
-                );
-              },
-              (response) {
-                Navigator.pushNamed(
-                  context, 
-                  '/',
-                  arguments: {"_animation": FadeToBlackTransition.transitionsBuilder, "_animation_duration": 800}
-                );
-              },
-            );
-            },
-          ),
+          ]
         ],
       ),
     );

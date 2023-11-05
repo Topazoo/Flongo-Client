@@ -1,7 +1,9 @@
 
 import 'package:flongo_client/pages/json_page.dart';
+import 'package:flongo_client/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
+import '../../navbar.dart';
 import 'json_widget.dart';
 
 class ConfigPage extends JSON_Page {
@@ -11,8 +13,10 @@ class ConfigPage extends JSON_Page {
   final bool fetchOnLoad = true;
   @override
   final bool authenticationRequired = true;
+  @override
+  final AppNavBar navbar = NavBar();
 
-  const ConfigPage({super.key});
+  ConfigPage({super.key});
 
   @override
   _ConfigPageState createState() => _ConfigPageState();
