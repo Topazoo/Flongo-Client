@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flongo_client/pages/api_page.dart';
 import 'package:flongo_client/utilities/http_client.dart';
 import 'package:flongo_client/utilities/transitions/fade_to_black_transition.dart';
@@ -91,12 +93,13 @@ class _LoginPageState extends API_PageState<LoginPage> with TickerProviderStateM
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    HTTPClient('/authenticate').login(
+                    HTTPClient(widget.apiURL).login(
                       _usernameController.text,
                       _passwordController.text,
                       (response) => _onLoginSuccess(),
                       (response) => setState(() {
-                        _errorMessage = 'Failed to authenticate: ${response.body}';
+                        Map<String, dynamic> errorData = jsonDecode(response.body);
+                        _errorMessage = errorData["error"];
                       })
                     );
                   }
