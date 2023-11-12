@@ -158,13 +158,19 @@ class HTTPClient {
       var response = await requestFunc().timeout(timeoutDuration);
       _handleResponse(response, onSuccess, onError);
     } catch (e) {
+      int code = 500;
+      String message = 'An unexpected error occurred';
+      String details = '$e';
+
       if (e is http.ClientException) {
-        onError?.call(http.Response('${e.message} Please ensure the server is running: [$baseUrl]', 400));
+        message = 'Failed to connect to server [$baseUrl]';
+        code = 400;
       } else if (e is TimeoutException) {
-        onError?.call(http.Response('Request timed out', 408));
-      } else {
-        onError?.call(http.Response('An unexpected error occurred: $e', 500));
+        message = 'Request timed out';
+        code = 408;
       }
+
+      onError?.call(http.Response(jsonEncode({'error': message, 'traceback': details}), code));
     }
   }
 

@@ -52,7 +52,8 @@ class API_PageState<T extends API_Page> extends BasePageState<T> {
         },
         onError: (response) {
           setState(() {
-            error = 'Failed to fetch data: ${response.body}';
+            Map<String, dynamic> errorData = jsonDecode(response.body);
+            error = errorData["error"];
             isLoading = false;
           });
         });
