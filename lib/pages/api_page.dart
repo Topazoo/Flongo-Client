@@ -8,6 +8,7 @@ class API_Page extends BasePage {
   final String apiURL = '/';
   final String dataPath = 'data';
   final bool fetchOnLoad = false;
+  final List<String> filterFields = const [];
 
   const API_Page({super.key});
 
