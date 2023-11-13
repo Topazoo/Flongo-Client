@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 class JSON_Widget extends StatefulWidget {
   final Map data;
   final String apiURL;
+  final List<String> filterFields;
 
   const JSON_Widget({
     Key? key,
     required this.data,
-    required this.apiURL
+    required this.apiURL, 
+    this.filterFields = const []
   }) : super(key: key);
 
   @override
@@ -23,7 +25,12 @@ class JSON_WidgetState extends State<JSON_Widget> with JSON_Widget_Mixin {
   @override
   void initState() {
     super.initState();
-    data = widget.data;
+    data = _filterData(widget.data);
+  }
+
+  Map<dynamic, dynamic> _filterData(Map<dynamic, dynamic> data) {
+    data.removeWhere((key, value) => widget.filterFields.contains(key));
+    return data;
   }
 
   Future<void> updateItem(Map item, {String idKey = '_id'}) async {
