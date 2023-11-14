@@ -92,7 +92,7 @@ class JSON_WidgetState<T extends JSON_Widget> extends State<T> with JSON_Widget_
     await HTTPClient(widget.apiURL).patch(
       body: updatedItem,
       onSuccess: (response) {
-        setState(() { data = updatedItem; });
+        setState(() { data = {...data, ...updatedItem}; });
         success = true;
       },
       onError: (error) {
