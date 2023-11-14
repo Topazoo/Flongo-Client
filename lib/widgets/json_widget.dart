@@ -74,9 +74,10 @@ class JSON_WidgetState<T extends JSON_Widget> extends State<T> with JSON_Widget_
           child: const Text('Update'),
           onPressed: () async {
             final finalItem = {...updatedItem, if (_id != null) idKey: _id};
-
             controllers.forEach((key, controller) {
-              finalItem[key] = convertToRawType(controller.text);
+              if (controller.text.isNotEmpty) {
+                finalItem[key] = convertToRawType(controller.text);
+              }
             });
 
             bool success = await _updateData(finalItem);
