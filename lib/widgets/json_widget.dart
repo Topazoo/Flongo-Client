@@ -77,6 +77,8 @@ class JSON_WidgetState<T extends JSON_Widget> extends State<T> with JSON_Widget_
             controllers.forEach((key, controller) {
               if (controller.text.isNotEmpty) {
                 finalItem[key] = convertToRawType(controller.text);
+              } else {
+                finalItem.remove(key);
               }
             });
 
