@@ -19,7 +19,7 @@ class JSON_Widget extends StatefulWidget {
 }
 
 
-class JSON_WidgetState extends State<JSON_Widget> with JSON_Widget_Mixin {
+class JSON_WidgetState<T extends JSON_Widget> extends State<T> with JSON_Widget_Mixin {
   late Map data;
 
   @override
