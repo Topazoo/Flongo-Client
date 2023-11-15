@@ -109,7 +109,7 @@ class JSONWidgetState extends State<JSON_List_Widget> with JSON_Widget_Mixin{
     );
   }
 
-  void _updateStateData(int index, Map<String, dynamic> updatedItem, dynamic response) {
+  void updateStateData(int index, Map<String, dynamic> updatedItem, dynamic response) {
     setState(() { data[index] = updatedItem; });
   }
 
@@ -118,7 +118,7 @@ class JSONWidgetState extends State<JSON_List_Widget> with JSON_Widget_Mixin{
     await HTTPClient(widget.apiURL).patch(
       body: updatedItem,
       onSuccess: (response) {
-        (onSuccess ?? _updateStateData)(index, updatedItem, response);
+        (onSuccess ?? updateStateData)(index, updatedItem, response);
         success = true;
       },
       onError: (error) {
@@ -131,7 +131,7 @@ class JSONWidgetState extends State<JSON_List_Widget> with JSON_Widget_Mixin{
     return success;
   }
 
-  void _deleteStateData(int index, Map<String, dynamic> item, dynamic response) {
+  void deleteStateData(int index, Map<String, dynamic> item, dynamic response) {
     setState(() { data.removeAt(index); });
   }
 
@@ -141,7 +141,7 @@ class JSONWidgetState extends State<JSON_List_Widget> with JSON_Widget_Mixin{
         '_id': item['_id'].toString(),
       },
       onSuccess: (response) {
-        (onSuccess ?? _deleteStateData)(index, item, response);
+        (onSuccess ?? deleteStateData)(index, item, response);
         showSnackBar(context, 'Deleted Successfully');
       },
       onError: (error) {

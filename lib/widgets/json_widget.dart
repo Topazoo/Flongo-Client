@@ -98,7 +98,7 @@ class JSON_WidgetState<T extends JSON_Widget> extends State<T> with JSON_Widget_
     );
   }
 
-  void _updateStateData(Map<String, dynamic> updatedItem, dynamic response) {
+  void updateStateData(Map<String, dynamic> updatedItem, dynamic response) {
     setState(() { data = {...data, ...updatedItem}; });
   }
 
@@ -107,7 +107,7 @@ class JSON_WidgetState<T extends JSON_Widget> extends State<T> with JSON_Widget_
     await HTTPClient(widget.apiURL).patch(
       body: updatedItem,
       onSuccess: (response) {
-        (onSuccess ?? _updateStateData)(updatedItem, response);
+        (onSuccess ?? updateStateData)(updatedItem, response);
         success = true;
       },
       onError: (error) {
@@ -120,7 +120,7 @@ class JSON_WidgetState<T extends JSON_Widget> extends State<T> with JSON_Widget_
     return success;
   }
 
-  void _deleteStateData(Map item, dynamic response) {
+  void deleteStateData(Map item, dynamic response) {
     setState(() { data = {}; });
   }
 
@@ -130,7 +130,7 @@ class JSON_WidgetState<T extends JSON_Widget> extends State<T> with JSON_Widget_
         '_id': item['_id'].toString(),
       },
       onSuccess: (response) {
-        (onSuccess ?? _deleteStateData)(item, response);
+        (onSuccess ?? deleteStateData)(item, response);
         showSnackBar(context, 'Deleted Successfully');
       },
       onError: (error) {
