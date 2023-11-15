@@ -131,16 +131,23 @@ class JSONWidgetState extends State<JSON_List_Widget> with JSON_Widget_Mixin{
     return success;
   }
 
-  Future<void> deleteItem(Map<String, dynamic> item, int index) async {
+  void _deleteStateData(int index, Map<String, dynamic> item, dynamic response) {
+    setState(() { data.removeAt(index); });
+  }
+
+  Future<void> deleteItem(Map<String, dynamic> item, int index, {Function? onSuccess, Function? onError}) async {
     await HTTPClient(widget.apiURL).delete(
       queryParams: {
         '_id': item['_id'].toString(),
       },
       onSuccess: (response) {
-        setState(() { data.removeAt(index); });
+        (onSuccess ?? _updateStateData)(index, item, response);
         showSnackBar(context, 'Deleted Successfully');
       },
-      onError: (response) {
+      onError: (error) {
+        if (onError != null) {
+          onError(index, item, error);
+        }
         showSnackBar(context, 'Failed to Delete');
       },
     );

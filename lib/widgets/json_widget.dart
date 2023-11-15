@@ -120,16 +120,23 @@ class JSON_WidgetState<T extends JSON_Widget> extends State<T> with JSON_Widget_
     return success;
   }
 
-  Future<void> deleteItem(Map item) async {
+  void _deleteStateData(Map item, dynamic response) {
+    setState(() { data = {}; });
+  }
+
+  Future<void> deleteItem(Map item, {Function? onSuccess, Function? onError}) async {
     await HTTPClient(widget.apiURL).delete(
       queryParams: {
         '_id': item['_id'].toString(),
       },
       onSuccess: (response) {
-        setState(() { data = {}; });
+        (onSuccess ?? _deleteStateData)(item, response);
         showSnackBar(context, 'Deleted Successfully');
       },
-      onError: (response) {
+      onError: (error) {
+        if (onError != null) {
+          onError(item, error);
+        }
         showSnackBar(context, 'Failed to Delete');
       },
     );
