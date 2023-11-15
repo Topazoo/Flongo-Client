@@ -33,7 +33,7 @@ class JSON_WidgetState<T extends JSON_Widget> extends State<T> with JSON_Widget_
     return data;
   }
 
-  Future<void> updateItem(Map item, {String idKey = '_id'}) async {
+  Future<void> updateItem(Map item, {String idKey = '_id', Function? onSuccess, Function? onError}) async {
     final controllers = <String, TextEditingController>{};
 
     Map<String, dynamic> updatedItem = Map<String, dynamic>.from(item);
@@ -43,7 +43,9 @@ class JSON_WidgetState<T extends JSON_Widget> extends State<T> with JSON_Widget_
 
     bool? isUpdated = await showDialog<bool>(
       context: context,
-      builder: (dialogContext) => _buildUpdateDialog(controllers, updatedItem, updatedItem.remove(idKey), idKey),
+      builder: (dialogContext) => _buildUpdateDialog(
+        controllers, updatedItem, updatedItem.remove(idKey), idKey, onSuccess: onSuccess, onError: onError
+      ),
     );
 
     if (isUpdated != null) {
@@ -51,7 +53,13 @@ class JSON_WidgetState<T extends JSON_Widget> extends State<T> with JSON_Widget_
     }
   }
 
-  AlertDialog _buildUpdateDialog(Map<String, TextEditingController> controllers, Map<String, dynamic> updatedItem, String? _id, String idKey) {
+  AlertDialog _buildUpdateDialog(
+      Map<String, TextEditingController> controllers,
+      Map<String, dynamic> updatedItem,
+      String? _id,
+      String idKey,
+      {Function? onSuccess, Function? onError}
+    ) {
     return AlertDialog(
       title: const Text('Update Item'),
       content: SingleChildScrollView(
@@ -82,7 +90,7 @@ class JSON_WidgetState<T extends JSON_Widget> extends State<T> with JSON_Widget_
               }
             });
 
-            bool success = await _updateData(finalItem);
+            bool success = await _updateData(finalItem, onSuccess: onSuccess, onError: onError);
             Navigator.of(context).pop(success);
           },
         ),
@@ -90,15 +98,22 @@ class JSON_WidgetState<T extends JSON_Widget> extends State<T> with JSON_Widget_
     );
   }
 
-  Future<bool> _updateData(Map<String, dynamic> updatedItem) async {
+  void _updateStateData(Map<String, dynamic> updatedItem, dynamic response) {
+    setState(() { data = {...data, ...updatedItem}; });
+  }
+
+  Future<bool> _updateData(Map<String, dynamic> updatedItem, {Function? onSuccess, Function? onError}) async {
     bool success = false;
     await HTTPClient(widget.apiURL).patch(
       body: updatedItem,
       onSuccess: (response) {
-        setState(() { data = {...data, ...updatedItem}; });
+        (onSuccess ?? _updateStateData)(updatedItem, response);
         success = true;
       },
       onError: (error) {
+        if (onError != null) {
+          onError(updatedItem, error);
+        }
         success = false;
       },
     );

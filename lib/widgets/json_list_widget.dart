@@ -46,7 +46,7 @@ class JSONWidgetState extends State<JSON_List_Widget> with JSON_Widget_Mixin{
     }).toList();
   }
 
-  Future<void> updateItem(Map item, int index, {String idKey = '_id'}) async {
+  Future<void> updateItem(Map item, int index, {String idKey = '_id', Function? onSuccess, Function? onError}) async {
     final controllers = <String, TextEditingController>{};
 
     Map<String, dynamic> updatedItem = Map<String, dynamic>.from(item);
@@ -56,7 +56,9 @@ class JSONWidgetState extends State<JSON_List_Widget> with JSON_Widget_Mixin{
 
     bool? isUpdated = await showDialog<bool>(
       context: context,
-      builder: (dialogContext) => _buildUpdateDialog(controllers, updatedItem, updatedItem.remove(idKey), index, idKey),
+      builder: (dialogContext) => _buildUpdateDialog(
+        controllers, updatedItem, updatedItem.remove(idKey), index, idKey, onSuccess: onSuccess, onError: onError
+      ),
     );
 
     if (isUpdated != null) {
@@ -64,7 +66,14 @@ class JSONWidgetState extends State<JSON_List_Widget> with JSON_Widget_Mixin{
     }
   }
 
-  AlertDialog _buildUpdateDialog(Map<String, TextEditingController> controllers, Map<String, dynamic> updatedItem, String? _id, int index, String idKey) {
+  AlertDialog _buildUpdateDialog(
+      Map<String, TextEditingController> controllers, 
+      Map<String, dynamic> updatedItem, 
+      String? _id, 
+      int index,
+      String idKey,
+      {Function? onSuccess , Function? onError}
+    ) {
     return AlertDialog(
       title: const Text('Update Item'),
       content: SingleChildScrollView(
@@ -92,7 +101,7 @@ class JSONWidgetState extends State<JSON_List_Widget> with JSON_Widget_Mixin{
               finalItem[key] = convertToRawType(controller.text);
             });
 
-            bool success = await _updateData(finalItem, index);
+            bool success = await _updateData(finalItem, index, onSuccess: onSuccess, onError: onError);
             Navigator.of(context).pop(success);
           },
         ),
@@ -100,15 +109,22 @@ class JSONWidgetState extends State<JSON_List_Widget> with JSON_Widget_Mixin{
     );
   }
 
-  Future<bool> _updateData(Map<String, dynamic> updatedItem, int index) async {
+  void _updateStateData(int index, Map<String, dynamic> updatedItem, dynamic response) {
+    setState(() { data[index] = updatedItem; });
+  }
+
+  Future<bool> _updateData(Map<String, dynamic> updatedItem, int index, {Function? onSuccess, Function? onError}) async {
     bool success = false;
     await HTTPClient(widget.apiURL).patch(
       body: updatedItem,
       onSuccess: (response) {
-        setState(() { data[index] = updatedItem; });
+        (onSuccess ?? _updateStateData)(index, updatedItem, response);
         success = true;
       },
       onError: (error) {
+        if (onError != null) {
+          onError(index, updatedItem, error);
+        }
         success = false;
       },
     );
