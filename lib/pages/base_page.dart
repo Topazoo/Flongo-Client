@@ -100,16 +100,14 @@ abstract class BasePageState<T extends BasePage> extends State<T> {
     return [];
   }
 
+  
+
   Widget _buildNavBar(BuildContext context) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          UserAccountsDrawerHeader(
-            accountName: Text(HTTPClient.getUsername() ?? 'Guest'),
-            accountEmail: Text(HTTPClient.isAuthenticated() ? "Email: ${HTTPClient.getEmail() ?? 'None'}" : 'Please Login'),
-            currentAccountPicture: const CircleAvatar(),
-          ),
+          widget.navbar.getNavbarHeader(),
           ..._buildStaticNavBarItems(context),
           if (HTTPClient.isAuthenticated()) ...[
             ListTile(

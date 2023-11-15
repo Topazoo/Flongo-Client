@@ -16,11 +16,18 @@ class NavBar extends AppNavBar {
 
     if (HTTPClient.isAdminAuthenticated()) ...[
       NavBarItem(
-        icon: Icons.home,
+        icon: Icons.settings,
         title: 'Config',
         routeName: '/config',
         routeArguments: {"_animation": FadeToBlackTransition.transitionsBuilder, "_animation_duration": 400}
       ),
     ]
   ];
+
+  @override
+  Widget getNavbarHeader() => UserAccountsDrawerHeader(
+    accountName: Text(HTTPClient.getUsername() ?? 'Guest'),
+    accountEmail: Text(HTTPClient.isAuthenticated() ? "Email: ${HTTPClient.getEmail() ?? 'None'}" : 'Please Login'),
+    currentAccountPicture: const CircleAvatar(),
+  );
 }
