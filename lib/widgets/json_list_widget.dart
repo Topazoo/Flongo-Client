@@ -141,7 +141,7 @@ class JSONWidgetState extends State<JSON_List_Widget> with JSON_Widget_Mixin{
         '_id': item['_id'].toString(),
       },
       onSuccess: (response) {
-        (onSuccess ?? _updateStateData)(index, item, response);
+        (onSuccess ?? _deleteStateData)(index, item, response);
         showSnackBar(context, 'Deleted Successfully');
       },
       onError: (error) {
