@@ -43,6 +43,7 @@ class API_PageState<T extends API_Page> extends BasePageState<T> {
 
   Future<void> fetchData() async {
     await client.get(
+        queryParams: widget.queryParams,
         onSuccess: (response) {
           dynamic responseData;
           if (response.body != null) {
