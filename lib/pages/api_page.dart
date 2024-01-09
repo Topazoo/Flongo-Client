@@ -5,12 +5,18 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class API_Page extends BasePage {
+  // URL to send the API request to
   final String apiURL = '/';
+  // Key to read response data from
   final String dataPath = 'data';
+  // True if the API call should be made when the widget loads
   final bool fetchOnLoad = false;
+  // Data to filter from the API call response
   final List<String> filterFields = const [];
+  // Query params to pass in the API call (overridden by concrete constructors)
+  final Map<String, String> queryParams = {};
 
-  const API_Page({super.key});
+  API_Page({super.key});
 
   @override
   API_PageState createState() => API_PageState();
