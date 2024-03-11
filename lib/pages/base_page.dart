@@ -45,43 +45,21 @@ abstract class BasePageState<T extends BasePage> extends State<T> {
   @protected
   List<Widget> getHeaderAppBarWidgets(context) => [];
 
-  Widget _buildNavBar(BuildContext context) {
+  @protected
+  Widget getPageDrawerWidget(BuildContext context) {
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           widget.navbar.getNavbarHeader(),
-          ..._buildStaticNavBarItems(context),
-          if (HTTPClient.isAuthenticated()) ...[
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
-              onTap: () {
-                HTTPClient('/authenticate').logout(
-                (response) {
-                  Navigator.pushNamed(
-                    context, 
-                    '/',
-                    arguments: {"_animation": FadeToBlackTransition.transitionsBuilder, "_animation_duration": 800}
-                  );
-                },
-                (response) {
-                  Navigator.pushNamed(
-                    context, 
-                    '/',
-                    arguments: {"_animation": FadeToBlackTransition.transitionsBuilder, "_animation_duration": 800}
-                  );
-                },
-              );
-              },
-            ),
-          ]
+          ...getStaticNavbarItems(context),
+          ...getDynamicNavbarItems(context)
         ],
       ),
     );
   }
 
-  List<Widget> _buildStaticNavBarItems(BuildContext context) {
+  List<Widget> getStaticNavbarItems(BuildContext context) {
     return (widget.navbar.getNavbarItems()).map((item) {
       return ListTile(
         leading: Icon(item.icon),
@@ -99,6 +77,40 @@ abstract class BasePageState<T extends BasePage> extends State<T> {
   }
 
   @protected
+  List<Widget> getDynamicNavbarItems(BuildContext context) {
+    // Based on Login Staus
+    if (HTTPClient.isAuthenticated())
+    {
+      return [
+        ListTile(
+          leading: const Icon(Icons.logout),
+          title: const Text('Logout'),
+          onTap: () {
+            HTTPClient('/authenticate').logout(
+            (response) {
+              Navigator.pushNamed(
+                context, 
+                '/',
+                arguments: {"_animation": FadeToBlackTransition.transitionsBuilder, "_animation_duration": 800}
+              );
+            },
+            (response) {
+              Navigator.pushNamed(
+                context, 
+                '/',
+                arguments: {"_animation": FadeToBlackTransition.transitionsBuilder, "_animation_duration": 800}
+              );
+            },
+          );
+          },
+        ),
+      ];
+    } else {
+      return [];
+    }
+  }
+
+  @protected
   Widget getPageWidget(BuildContext context);
 
   @protected
@@ -108,7 +120,7 @@ abstract class BasePageState<T extends BasePage> extends State<T> {
   Widget getPageErrorWidget(BuildContext context) => Text(error);
 
   @protected
-  Widget _getPageWidget(BuildContext context) {
+  Widget getPageBodyWidget(BuildContext context) {
     if (isLoading) {
       return getPageLoadingWidget(context);
     }
@@ -158,8 +170,8 @@ abstract class BasePageState<T extends BasePage> extends State<T> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: getPageHeaderWidget(context),
-      body: _getPageWidget(context),
-      drawer: _buildNavBar(context),
+      body: getPageBodyWidget(context),
+      drawer: getPageDrawerWidget(context),
       bottomNavigationBar: getPageFooterWidget(context),
     );
   }
